@@ -10,3 +10,10 @@ import './styles/app.css'
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
+
+import React from 'react'
+import ReactDom from 'react-dom'
+
+import App from './react/App'
+
+ReactDom.render(<App />, document.getElementById('root'))
