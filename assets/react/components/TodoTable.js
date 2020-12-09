@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { TodoContext } from '../contexts/TodoContext'
 
@@ -10,43 +10,63 @@ import DeleteIcon from '@material-ui/icons/Delete'
 
 function TodoTable() {
     const context = useContext(TodoContext)
+    const [addTodo, setAddTodo] = useState('')
+
+    const submitForm = (e) => {
+        e.preventDefault()
+
+        if (addTodo.length >= 3) {
+            context.createTodo({ id: context.todos.length + 1, name: addTodo })
+
+            setAddTodo('')
+        }
+    }
 
     return (
-        <Table>
-            <TableHead>
-                <TableRow>
-                    <TableCell>Task</TableCell>
-                    <TableCell align="right">Actions</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                <TableRow>
-                    <TableCell>
-                        <TextField fullWidth={true} />
-                    </TableCell>
-                    <TableCell align="right">
-                        <IconButton>
-                            <AddIcon />
-                        </IconButton>
-                    </TableCell>
-                </TableRow>
-                {context.todos.map((todo) => (
-                    <TableRow key={todo.id}>
-                        <TableCell component="th" scope="row">
-                            {todo.name}
+        <form onSubmit={submitForm}>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Task</TableCell>
+                        <TableCell align="right">Actions</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    <TableRow>
+                        <TableCell>
+                            <TextField
+                                value={addTodo}
+                                onChange={(e) => {
+                                    setAddTodo(e.target.value)
+                                }}
+                                label="New Task"
+                                fullWidth={true}
+                            />
                         </TableCell>
                         <TableCell align="right">
-                            <IconButton>
-                                <EditIcon />
-                            </IconButton>
-                            <IconButton>
-                                <DeleteIcon />
+                            <IconButton type="submit">
+                                <AddIcon />
                             </IconButton>
                         </TableCell>
                     </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+                    {context.todos.map((todo, index) => (
+                        <TableRow key={`todo-` + index}>
+                            <TableCell component="th" scope="row">
+                                {todo.name}
+                            </TableCell>
+                            <TableCell align="right">
+                                <IconButton>
+                                    <EditIcon />
+                                </IconButton>
+                                <IconButton>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </form>
     )
 }
 

@@ -15,7 +15,11 @@ function TodoContextProvider({ children }) {
     ])
 
     const createTodo = (todo) => {
-        setTodo(todo)
+        const newTodos = [...todos, todo].sort(function (a, b) {
+            return b.id - a.id
+        })
+
+        setTodo(newTodos)
     }
     const updateTodo = () => {}
     const deleteTodo = () => {}
