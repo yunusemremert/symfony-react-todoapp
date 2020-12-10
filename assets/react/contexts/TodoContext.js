@@ -21,7 +21,13 @@ function TodoContextProvider({ children }) {
 
         setTodo(newTodos)
     }
-    const updateTodo = () => {}
+    const updateTodo = (data) => {
+        let todo = todos.find((todo) => {
+            return todo.id === data.id
+        })
+
+        todo.name = data.name
+    }
     const deleteTodo = () => {}
 
     return <TodoContext.Provider value={{ todos, createTodo, updateTodo, deleteTodo }}>{children}</TodoContext.Provider>

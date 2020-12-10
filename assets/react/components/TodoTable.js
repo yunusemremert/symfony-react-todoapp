@@ -2,15 +2,29 @@ import React, { useContext, useState } from 'react'
 
 import { TodoContext } from '../contexts/TodoContext'
 
-import { IconButton, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@material-ui/core'
+import {
+    IconButton,
+    InputAdornment,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    TextField
+} from '@material-ui/core'
 
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
+import DoneIcon from '@material-ui/icons/Done'
+import CloseIcon from '@material-ui/icons/Close'
 
 function TodoTable() {
     const context = useContext(TodoContext)
+
     const [addTodo, setAddTodo] = useState('')
+    const [editIsShow, setEditIsShow] = useState(0)
+    const [editTodo, setEditTodo] = useState('')
 
     const submitForm = (e) => {
         e.preventDefault()
@@ -52,10 +66,48 @@ function TodoTable() {
                     {context.todos.map((todo, index) => (
                         <TableRow key={`todo-` + index}>
                             <TableCell component="th" scope="row">
-                                {todo.name}
+                                {editIsShow === todo.id ? (
+                                    <TextField
+                                        fullWidth={true}
+                                        value={editTodo}
+                                        onChange={(e) => {
+                                            setEditTodo(e.target.value)
+                                        }}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="start" style={{ margin: '20px 8px 30px 0' }}>
+                                                    <IconButton
+                                                        onClick={() => {
+                                                            {
+                                                                context.updateTodo({ id: todo.id, name: editTodo })
+                                                                setEditIsShow(0)
+                                                            }
+                                                        }}
+                                                    >
+                                                        <DoneIcon />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        onClick={() => {
+                                                            setEditIsShow(0)
+                                                        }}
+                                                    >
+                                                        <CloseIcon />
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                    />
+                                ) : (
+                                    todo.name
+                                )}
                             </TableCell>
                             <TableCell align="right">
-                                <IconButton>
+                                <IconButton
+                                    onClick={() => {
+                                        setEditIsShow(todo.id)
+                                        setEditTodo(todo.name)
+                                    }}
+                                >
                                     <EditIcon />
                                 </IconButton>
                                 <IconButton>
