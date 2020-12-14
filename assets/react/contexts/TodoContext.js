@@ -6,11 +6,11 @@ function TodoContextProvider({ children }) {
     const [todos, setTodo] = useState([
         {
             id: 1,
-            name: 'React import'
+            name: 'React import 1'
         },
         {
             id: 2,
-            name: 'React import'
+            name: 'React import 2'
         }
     ])
 
@@ -28,7 +28,11 @@ function TodoContextProvider({ children }) {
 
         todo.name = data.name
     }
-    const deleteTodo = () => {}
+    const deleteTodo = (id) => {
+        const newTodos = todos.filter((todo) => todo.id !== id)
+
+        setTodo(newTodos)
+    }
 
     return <TodoContext.Provider value={{ todos, createTodo, updateTodo, deleteTodo }}>{children}</TodoContext.Provider>
 }
