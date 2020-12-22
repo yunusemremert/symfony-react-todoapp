@@ -2,21 +2,31 @@ import React, { createContext, useEffect, useState } from 'react'
 
 export const TodoContext = createContext(null)
 
+import configData from '../../config.json'
+
 function TodoContextProvider({ children }) {
     const [todos, setTodo] = useState([])
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/todo/read')
+        fetch(configData.SERVER_URL + '/api/todo/read')
             .then((response) => response.json())
             .then((data) => setTodo(data))
-    })
+    }, [])
 
     const createTodo = (todo) => {
-        const newTodos = [...todos, todo].sort(function (a, b) {
-            return b.id - a.id
+        fetch(configData.SERVER_URL + '/api/todo/create', {
+            method: 'POST',
+            body: JSON.stringify(todo)
         })
+            .then((res) => res.json())
+            .then((res) => {
+                const newTodos = [...todos, res.todo]
 
-        setTodo(newTodos)
+                setTodo(newTodos)
+            })
+            .catch((error) => {
+                console.log(error.message)
+            })
     }
 
     const updateTodo = (data) => {
