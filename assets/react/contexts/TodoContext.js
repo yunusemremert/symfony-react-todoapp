@@ -30,11 +30,25 @@ function TodoContextProvider({ children }) {
     }
 
     const updateTodo = (data) => {
-        let todo = todos.find((todo) => {
-            return todo.id === data.id
+        fetch(configData.SERVER_URL + '/api/todo/update/' + data.id, {
+            method: 'PUT',
+            body: JSON.stringify(data)
         })
+            .then((res) => res.json())
+            .then((res) => {
+                let todo = todos.find((todo) => {
+                    return todo.id === data.id
+                })
 
-        todo.name = data.name
+                todo.name = data.name
+
+                const newTodos = [...todos, todo]
+
+                setTodo(newTodos)
+            })
+            .catch((error) => {
+                console.log(error.message)
+            })
     }
 
     const deleteTodo = (id) => {
