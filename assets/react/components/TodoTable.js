@@ -5,6 +5,7 @@ import { TodoContext } from '../contexts/TodoContext'
 import {
     IconButton,
     InputAdornment,
+    LinearProgress,
     Table,
     TableBody,
     TableCell,
@@ -34,7 +35,7 @@ function TodoTable() {
         e.preventDefault()
 
         if (addTodo.length >= 3) {
-            context.createTodo({ id: context.todos.length + 1, name: addTodo })
+            context.createTodo({ name: addTodo })
 
             setAddTodo('')
         }
@@ -68,67 +69,78 @@ function TodoTable() {
                                 </IconButton>
                             </TableCell>
                         </TableRow>
-                        {context.todos.map((todo, index) => (
-                            <TableRow key={`todo-` + index}>
-                                <TableCell component="th" scope="row">
-                                    {editIsShow === todo.id ? (
-                                        <TextField
-                                            fullWidth={true}
-                                            value={editTodo}
-                                            onChange={(e) => {
-                                                setEditTodo(e.target.value)
-                                            }}
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment
-                                                        position="start"
-                                                        style={{ margin: '20px 8px 30px 0' }}
-                                                    >
-                                                        <IconButton
-                                                            onClick={() => {
-                                                                {
-                                                                    context.updateTodo({ id: todo.id, name: editTodo })
-                                                                    setEditIsShow(0)
-                                                                }
-                                                            }}
-                                                        >
-                                                            <DoneIcon />
-                                                        </IconButton>
-                                                        <IconButton
-                                                            onClick={() => {
-                                                                setEditIsShow(0)
-                                                            }}
-                                                        >
-                                                            <CloseIcon />
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                )
-                                            }}
-                                        />
-                                    ) : (
-                                        todo.name
-                                    )}
-                                </TableCell>
-                                <TableCell align="right">
-                                    <IconButton
-                                        onClick={() => {
-                                            setEditIsShow(todo.id)
-                                            setEditTodo(todo.name)
-                                        }}
-                                    >
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton
-                                        onClick={() => {
-                                            setDeleteTodo(todo)
-                                            setDeleteIsShow(true)
-                                        }}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
+                        {context.todos.length === 0 ? (
+                            <TableRow>
+                                <TableCell>
+                                    <LinearProgress />
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            context.todos.map((todo, index) => (
+                                <TableRow key={`todo-` + index}>
+                                    <TableCell component="th" scope="row">
+                                        {editIsShow === todo.id ? (
+                                            <TextField
+                                                fullWidth={true}
+                                                value={editTodo}
+                                                onChange={(e) => {
+                                                    setEditTodo(e.target.value)
+                                                }}
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment
+                                                            position="start"
+                                                            style={{ margin: '20px 8px 30px 0' }}
+                                                        >
+                                                            <IconButton
+                                                                onClick={() => {
+                                                                    {
+                                                                        context.updateTodo({
+                                                                            id: todo.id,
+                                                                            name: editTodo
+                                                                        })
+                                                                        setEditIsShow(0)
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <DoneIcon />
+                                                            </IconButton>
+                                                            <IconButton
+                                                                onClick={() => {
+                                                                    setEditIsShow(0)
+                                                                }}
+                                                            >
+                                                                <CloseIcon />
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                    )
+                                                }}
+                                            />
+                                        ) : (
+                                            todo.name
+                                        )}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <IconButton
+                                            onClick={() => {
+                                                setEditIsShow(todo.id)
+                                                setEditTodo(todo.name)
+                                            }}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={() => {
+                                                setDeleteTodo(todo)
+                                                setDeleteIsShow(true)
+                                            }}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </form>
