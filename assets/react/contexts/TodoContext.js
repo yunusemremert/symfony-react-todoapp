@@ -6,6 +6,7 @@ import configData from '../../config.json'
 
 function TodoContextProvider({ children }) {
     const [todos, setTodo] = useState([])
+    const [message, setMessage] = useState({})
 
     useEffect(() => {
         fetch(configData.SERVER_URL + '/api/todo/read')
@@ -20,9 +21,13 @@ function TodoContextProvider({ children }) {
         })
             .then((res) => res.json())
             .then((res) => {
-                const newTodos = [...todos, res.todo]
+                if (res.error === false) {
+                    const newTodos = [...todos, res.todo]
 
-                setTodo(newTodos)
+                    setTodo(newTodos)
+                }
+
+                setMessage({ text: res.message, status: res.error })
             })
             .catch((error) => {
                 console.log(error.message)
@@ -35,7 +40,7 @@ function TodoContextProvider({ children }) {
             body: JSON.stringify(data)
         })
             .then((res) => res.json())
-            .then(() => {
+            .then((res) => {
                 let todo = todos.find((todo) => {
                     return todo.id === data.id
                 })
@@ -45,6 +50,8 @@ function TodoContextProvider({ children }) {
                 const newTodos = [...todos, todo]
 
                 setTodo(newTodos)
+
+                setMessage({ text: res.message, status: res.error })
             })
             .catch((error) => {
                 console.log(error.message)
@@ -60,13 +67,21 @@ function TodoContextProvider({ children }) {
                 const newTodos = todos.filter((todo) => todo.id !== id)
 
                 setTodo(newTodos)
+
+                setMessage({ text: res.message, status: res.error })
             })
             .catch((error) => {
                 console.log(error.message)
             })
     }
 
-    return <TodoContext.Provider value={{ todos, createTodo, updateTodo, deleteTodo }}>{children}</TodoContext.Provider>
+    return (
+        <TodoContext.Provider
+            value={{ todos, createTodo, updateTodo, deleteTodo, message, setMessage: (message) => setMessage(message) }}
+        >
+            {children}
+        </TodoContext.Provider>
+    )
 }
 
 export default TodoContextProvider
