@@ -35,7 +35,7 @@ function TodoContextProvider({ children }) {
             body: JSON.stringify(data)
         })
             .then((res) => res.json())
-            .then((res) => {
+            .then(() => {
                 let todo = todos.find((todo) => {
                     return todo.id === data.id
                 })
@@ -52,9 +52,18 @@ function TodoContextProvider({ children }) {
     }
 
     const deleteTodo = (id) => {
-        const newTodos = todos.filter((todo) => todo.id !== id)
+        fetch(configData.SERVER_URL + '/api/todo/delete/' + id, {
+            method: 'DELETE'
+        })
+            .then((res) => res.json())
+            .then((res) => {
+                const newTodos = todos.filter((todo) => todo.id !== id)
 
-        setTodo(newTodos)
+                setTodo(newTodos)
+            })
+            .catch((error) => {
+                console.log(error.message)
+            })
     }
 
     return <TodoContext.Provider value={{ todos, createTodo, updateTodo, deleteTodo }}>{children}</TodoContext.Provider>

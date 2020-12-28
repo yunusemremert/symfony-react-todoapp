@@ -114,4 +114,30 @@ class TodoController extends AbstractController
 
         return $data;
     }
+
+    /**
+     * @Route("/delete/{id}", name="todo_api_delete", methods={"DELETE"})
+     * @param Todo $todo
+     * @return JsonResponse
+     */
+    public function delete(Todo $todo): JsonResponse
+    {
+        try {
+            $this->entityManager->remove($todo);
+            $this->entityManager->flush();
+
+            $data = $this->json([
+                "error" => false,
+                "message" => "!Todo has been deleted."
+            ]);
+
+        } catch (Exception $exception) {
+            $data = $this->json([
+                "error" => true,
+                "message" => $exception->getMessage()
+            ]);
+        }
+
+        return $data;
+    }
 }
