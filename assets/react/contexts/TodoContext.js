@@ -46,10 +46,9 @@ function TodoContextProvider({ children }) {
                 })
 
                 todo.name = data.name
+                todo.description = data.description
 
-                const newTodos = [...todos, todo]
-
-                setTodo(newTodos)
+                setTodo([...todos])
 
                 setMessage({ text: res.message, status: res.error })
             })

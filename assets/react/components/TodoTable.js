@@ -25,19 +25,22 @@ import DeleteDialog from './DeleteDialog'
 function TodoTable() {
     const context = useContext(TodoContext)
 
-    const [addTodo, setAddTodo] = useState('')
+    const [addTodoName, setAddTodoName] = useState('')
+    const [addTodoDescription, setAddTodoDescription] = useState('')
     const [deleteTodo, setDeleteTodo] = useState({})
     const [editIsShow, setEditIsShow] = useState(0)
-    const [editTodo, setEditTodo] = useState('')
+    const [editTodoName, setEditTodoName] = useState('')
+    const [editTodoDescription, setEditTodoDescription] = useState('')
     const [deleteIsShow, setDeleteIsShow] = useState(false)
 
     const submitForm = (e) => {
         e.preventDefault()
 
-        if (addTodo.length >= 3) {
-            context.createTodo({ name: addTodo })
+        if (addTodoName.length >= 3) {
+            context.createTodo({ name: addTodoName, description: addTodoDescription })
 
-            setAddTodo('')
+            setAddTodoName('')
+            setAddTodoDescription('')
         }
     }
 
@@ -48,6 +51,7 @@ function TodoTable() {
                     <TableHead>
                         <TableRow>
                             <TableCell>Task</TableCell>
+                            <TableCell>Description</TableCell>
                             <TableCell align="right">Actions</TableCell>
                         </TableRow>
                     </TableHead>
@@ -55,9 +59,19 @@ function TodoTable() {
                         <TableRow>
                             <TableCell>
                                 <TextField
-                                    value={addTodo}
+                                    value={addTodoName}
                                     onChange={(e) => {
-                                        setAddTodo(e.target.value)
+                                        setAddTodoName(e.target.value)
+                                    }}
+                                    label="New Task"
+                                    fullWidth={true}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <TextField
+                                    value={addTodoDescription}
+                                    onChange={(e) => {
+                                        setAddTodoDescription(e.target.value)
                                     }}
                                     label="New Task"
                                     fullWidth={true}
@@ -82,9 +96,9 @@ function TodoTable() {
                                         {editIsShow === todo.id ? (
                                             <TextField
                                                 fullWidth={true}
-                                                value={editTodo}
+                                                value={editTodoName}
                                                 onChange={(e) => {
-                                                    setEditTodo(e.target.value)
+                                                    setEditTodoName(e.target.value)
                                                 }}
                                                 InputProps={{
                                                     endAdornment: (
@@ -97,7 +111,8 @@ function TodoTable() {
                                                                     {
                                                                         context.updateTodo({
                                                                             id: todo.id,
-                                                                            name: editTodo
+                                                                            name: editTodoName,
+                                                                            description: editTodoDescription
                                                                         })
                                                                         setEditIsShow(0)
                                                                     }
@@ -120,11 +135,55 @@ function TodoTable() {
                                             todo.name
                                         )}
                                     </TableCell>
+                                    <TableCell component="th" scope="row">
+                                        {editIsShow === todo.id ? (
+                                            <TextField
+                                                fullWidth={true}
+                                                value={editTodoDescription}
+                                                onChange={(e) => {
+                                                    setEditTodoDescription(e.target.value)
+                                                }}
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment
+                                                            position="start"
+                                                            style={{ margin: '20px 8px 30px 0' }}
+                                                        >
+                                                            <IconButton
+                                                                onClick={() => {
+                                                                    {
+                                                                        context.updateTodo({
+                                                                            id: todo.id,
+                                                                            name: editTodoName,
+                                                                            description: editTodoDescription
+                                                                        })
+                                                                        setEditIsShow(0)
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <DoneIcon />
+                                                            </IconButton>
+                                                            <IconButton
+                                                                onClick={() => {
+                                                                    setEditIsShow(0)
+                                                                }}
+                                                            >
+                                                                <CloseIcon />
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                    )
+                                                }}
+                                            />
+                                        ) : (
+                                            todo.description
+                                        )}
+                                    </TableCell>
                                     <TableCell align="right">
                                         <IconButton
                                             onClick={() => {
                                                 setEditIsShow(todo.id)
-                                                setEditTodo(todo.name)
+                                                setEditTodoName(todo.name)
+                                                setEditTodoDescription(todo.description)
                                             }}
                                         >
                                             <EditIcon />

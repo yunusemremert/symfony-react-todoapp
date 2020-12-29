@@ -16,13 +16,17 @@ const AppSnackbar = () => {
         }
     }
 
+    const handleClose = () => {
+        context.setMessage({})
+    }
+
     return (
-        <Snackbar open={context.message?.text !== undefined} autoHideDuration={3000}>
+        <Snackbar open={context.message?.text !== undefined} autoHideDuration={3000} onClose={handleClose}>
             <SnackbarContent
                 style={{ backgroundColor: checkStatus(context.message.status) }}
                 message={context.message.text}
                 action={[
-                    <Button onClick={() => context.setMessage({})} key="dismiss" color="inherit">
+                    <Button onClick={handleClose} key="dismiss" color="inherit">
                         Dismiss
                     </Button>
                 ]}
