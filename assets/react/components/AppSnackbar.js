@@ -23,7 +23,7 @@ const AppSnackbar = () => {
     return (
         <Snackbar open={context.message?.text !== undefined} autoHideDuration={3000} onClose={handleClose}>
             <SnackbarContent
-                style={{ backgroundColor: checkStatus(context.message.status) }}
+                style={{ backgroundColor: checkStatus(context.message.status), whiteSpace: 'pre' }}
                 message={context.message.text}
                 action={[
                     <Button onClick={handleClose} key="dismiss" color="inherit">

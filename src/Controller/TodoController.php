@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Todo;
+use App\Form\TodoType;
 use App\Repository\TodoRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,6 +62,25 @@ class TodoController extends AbstractController
     {
         $content = json_decode($request->getContent());
 
+        $form = $this->createForm(TodoType::class);
+        $form->submit((array) $content);
+
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $errors = [];
+
+            foreach ($form->getErrors(true) as $error) {
+                $propertyName = $error->getOrigin()->getName();
+
+                $errors[$propertyName] = $error->getMessage();
+            }
+
+            return $this->json([
+                "error" => true,
+                "message" => join("\n", $errors),
+                "todo" => null
+            ]);
+        }
+
         $todo = new Todo();
 
         $todo->setName($content->name);
@@ -95,6 +115,27 @@ class TodoController extends AbstractController
     public function update(Request $request, Todo $todo): JsonResponse
     {
         $content = json_decode($request->getContent());
+
+        $form = $this->createForm(TodoType::class);
+        $requestArray = (array) $content;
+        unset($requestArray["id"]);
+        $form->submit($requestArray);
+
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $errors = [];
+
+            foreach ($form->getErrors(true) as $error) {
+                $propertyName = $error->getOrigin()->getName();
+
+                $errors[$propertyName] = $error->getMessage();
+            }
+
+            return $this->json([
+                "error" => true,
+                "message" => join("\n", $errors),
+                "todo" => null
+            ]);
+        }
 
         $todo->setName($content->name);
         $todo->setDescription($content->description);

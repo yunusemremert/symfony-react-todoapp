@@ -36,11 +36,13 @@ function TodoTable() {
     const submitForm = (e) => {
         e.preventDefault()
 
-        if (addTodoName.length >= 3) {
+        if (addTodoName.length >= 5 && addTodoDescription.length >= 5) {
             context.createTodo({ name: addTodoName, description: addTodoDescription })
 
             setAddTodoName('')
             setAddTodoDescription('')
+        } else {
+            context.setMessage({ text: '!Enter at least 5 character.', status: true })
         }
     }
 
@@ -114,7 +116,6 @@ function TodoTable() {
                                                                             name: editTodoName,
                                                                             description: editTodoDescription
                                                                         })
-                                                                        setEditIsShow(0)
                                                                     }
                                                                 }}
                                                             >
@@ -157,7 +158,6 @@ function TodoTable() {
                                                                             name: editTodoName,
                                                                             description: editTodoDescription
                                                                         })
-                                                                        setEditIsShow(0)
                                                                     }
                                                                 }}
                                                             >
