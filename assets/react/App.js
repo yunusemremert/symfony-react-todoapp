@@ -5,15 +5,15 @@ import TodoContextProvider from './contexts/TodoContext'
 import TodoTable from './components/TodoTable'
 import AppSnackbar from './components/AppSnackbar'
 
-import { CssBaseline } from '@material-ui/core'
+import DefaultThemeProvider from './components/themes/DefaultThemeProvider'
 
 export default function App() {
     return (
-        <TodoContextProvider>
-            <CssBaseline>
+        <DefaultThemeProvider>
+            <TodoContextProvider>
                 <TodoTable />
                 <AppSnackbar />
-            </CssBaseline>
-        </TodoContextProvider>
+            </TodoContextProvider>
+        </DefaultThemeProvider>
     )
 }

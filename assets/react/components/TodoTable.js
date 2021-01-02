@@ -2,10 +2,13 @@ import React, { useContext, useState } from 'react'
 
 import { TodoContext } from '../contexts/TodoContext'
 
+import DeleteDialog from './DeleteDialog'
+
 import {
     IconButton,
     InputAdornment,
     LinearProgress,
+    makeStyles,
     Table,
     TableBody,
     TableCell,
@@ -20,7 +23,11 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import DoneIcon from '@material-ui/icons/Done'
 import CloseIcon from '@material-ui/icons/Close'
 
-import DeleteDialog from './DeleteDialog'
+const useStyles = makeStyles((theme) => ({
+    thead: {
+        backgroundColor: theme.palette.primary.main
+    }
+}))
 
 function TodoTable() {
     const context = useContext(TodoContext)
@@ -32,6 +39,8 @@ function TodoTable() {
     const [editTodoName, setEditTodoName] = useState('')
     const [editTodoDescription, setEditTodoDescription] = useState('')
     const [deleteIsShow, setDeleteIsShow] = useState(false)
+
+    const classes = useStyles()
 
     const submitForm = (e) => {
         e.preventDefault()
@@ -50,7 +59,7 @@ function TodoTable() {
         <>
             <form onSubmit={submitForm}>
                 <Table>
-                    <TableHead>
+                    <TableHead className={classes.thead}>
                         <TableRow>
                             <TableCell>Task</TableCell>
                             <TableCell>Description</TableCell>
@@ -87,7 +96,7 @@ function TodoTable() {
                         </TableRow>
                         {context.todos.length === 0 ? (
                             <TableRow>
-                                <TableCell>
+                                <TableCell colSpan={3}>
                                     <LinearProgress />
                                 </TableCell>
                             </TableRow>
@@ -180,6 +189,7 @@ function TodoTable() {
                                     </TableCell>
                                     <TableCell align="right">
                                         <IconButton
+                                            color="primary"
                                             onClick={() => {
                                                 setEditIsShow(todo.id)
                                                 setEditTodoName(todo.name)
@@ -189,6 +199,7 @@ function TodoTable() {
                                             <EditIcon />
                                         </IconButton>
                                         <IconButton
+                                            color="secondary"
                                             onClick={() => {
                                                 setDeleteTodo(todo)
                                                 setDeleteIsShow(true)

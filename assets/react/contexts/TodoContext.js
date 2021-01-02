@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, useEffect, useLayoutEffect, useState } from 'react'
 
 export const TodoContext = createContext(null)
 
@@ -8,7 +8,7 @@ function TodoContextProvider({ children }) {
     const [todos, setTodo] = useState([])
     const [message, setMessage] = useState({})
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         fetch(configData.SERVER_URL + '/api/todo/read')
             .then((response) => response.json())
             .then((data) => setTodo(data))
